@@ -2,9 +2,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 int main() {
+  if (getuid() != 0) {
+    printf("\nYou Should Run This Program With SUDO or Root Account\n\n");
+    exit(EXIT_FAILURE);
+  }
   int target, targetMin, delay, isOn = 0;
-  printf("\n# !NOTICE!\n# You Should Run This Program With "
-         "SUDO\n\n");
+  printf("\nAutoFan\n\n");
   printf("Target Temp >");
   scanf("%d", &target);
   printf("OFF Trigger Temp > ");
