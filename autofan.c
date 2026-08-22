@@ -3,6 +3,8 @@
 #include <unistd.h>
 int main() {
   int target, targetMin, delay, isOn = 0;
+  printf("\n# !NOTICE!\n# You Should Run This Program With "
+         "SUDO\n\n");
   printf("Target Temp >");
   scanf("%d", &target);
   printf("OFF Trigger Temp > ");
@@ -15,14 +17,14 @@ int main() {
   while (1) {
     fp = fopen("/sys/class/thermal/thermal_zone0/temp", "r");
     fscanf(fp, "%d", &cpu);
-    pclose(fp);
+    fclose(fp);
     cpu = cpu / 1000;
     // CPU COM
     fp = popen("nvidia-smi --query-gpu=temperature.gpu "
                "--format=csv,noheader,nounits 2>/dev/null",
                "r");
     fscanf(fp, "%d", &gpu);
-    fclose(fp);
+    pclose(fp);
     // GPU COM
 
     if (cpu >= target || gpu >= target) {
