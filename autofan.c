@@ -13,7 +13,7 @@ int main() {
   int cpu, gpu;
   FILE *fp;
   while (1) {
-    fp = popen("cat /sys/class/thermal/thermal_zone0/temp", "r");
+    fp = fopen("/sys/class/thermal/thermal_zone0/temp", "r");
     fscanf(fp, "%d", &cpu);
     pclose(fp);
     cpu = cpu / 1000;
@@ -22,23 +22,25 @@ int main() {
                "--format=csv,noheader,nounits 2>/dev/null",
                "r");
     fscanf(fp, "%d", &gpu);
-    pclose(fp);
+    fclose(fp);
     // GPU COM
 
     if (cpu >= target || gpu >= target) {
       if (isOn == 0) {
         printf("\nTriggering Fan ON (CPU:%d | GPU:%d)\n", cpu, gpu);
         system("date");
-        system(
-            "echo 'on' | sudo tee /sys/devices/platform/msi-ec/cooler_boost");
+        fp = fopen("/sys/devices/platform/msi-ec/cooler_boost", "w");
+        fputs("on", fp);
+        fclose(fp);
         isOn = 1;
       }
     } else if (cpu <= targetMin && gpu <= targetMin) {
       if (isOn == 1) {
         printf("\nTriggering Fan OFF (CPU:%d | GPU:%d)\n", cpu, gpu);
         system("date");
-        system(
-            "echo 'off' | sudo tee /sys/devices/platform/msi-ec/cooler_boost");
+        fp = fopen("/sys/devices/platform/msi-ec/cooler_boost", "w");
+        fputs("off", fp);
+        fclose(fp);
         isOn = 0;
       }
     }
