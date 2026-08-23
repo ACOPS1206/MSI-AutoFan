@@ -6,7 +6,13 @@ int main() {
     printf("\nYou Should Run This Program With SUDO or Root Account\n\n");
     exit(EXIT_FAILURE);
   }
-  printf("\nFan Controler\n\nWhat Do You Want To Do?\n1.ON\n2.OFF\n3.View "
+  char current[4];
+  FILE *fp;
+  fp = fopen("/sys/devices/platform/msi-ec/cooler_boost", "r");
+  fscanf(fp, "%s", &current);
+  fclose(fp);
+  printf("\nFan Controller\n\nCurrent Fan Status Is: %s", current);
+  printf("\nWhat Do You Want To Do?\n1.ON\n2.OFF\n3.View "
          "Command\n\nINPUT > ");
   int in;
   scanf("%d", &in);
